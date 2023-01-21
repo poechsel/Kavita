@@ -582,7 +582,7 @@ public class SeriesService : ISeriesService
             }
             else
             {
-                volume.Name += $" - {firstChapter.TitleName}";
+                volume.Name = firstChapter.TitleName;
             }
 
             return;
