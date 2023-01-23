@@ -188,7 +188,11 @@ public class ReaderController : BaseApiController
         var dto = await _unitOfWork.ChapterRepository.GetChapterInfoDtoAsync(chapterId);
         if (dto == null) return BadRequest("Please perform a scan on this series or library and try again");
         var mangaFile = chapter.Files.First();
-
+        if (mangaFile.Pages < 0) {
+            var pages = _cacheService.GetNumberOfPages(mangaFile.FilePath, mangaFile.Format);
+            mangaFile.Pages = pages;
+            await _unitOfWork.CommitAsync();
+        }
         var info = new ChapterInfoDto()
         {
             ChapterNumber = dto.ChapterNumber,
@@ -196,11 +200,11 @@ public class ReaderController : BaseApiController
             VolumeId = dto.VolumeId,
             FileName = Path.GetFileName(mangaFile.FilePath),
             SeriesName = dto.SeriesName,
-            SeriesFormat = dto.SeriesFormat,
+            SeriesFormat = mangaFile.Format,
             SeriesId = dto.SeriesId,
             LibraryId = dto.LibraryId,
             IsSpecial = dto.IsSpecial,
-            Pages = dto.Pages,
+            Pages = mangaFile.Pages,
             ChapterTitle = dto.ChapterTitle ?? string.Empty,
             Subtitle = string.Empty,
             Title = dto.SeriesName,

@@ -33,6 +33,7 @@ public interface ICacheService
     void CleanupChapters(IEnumerable<int> chapterIds);
     void CleanupBookmarks(IEnumerable<int> seriesIds);
     string GetCachedPagePath(int chapterId, int page);
+    int GetNumberOfPages(string filePath, MangaFormat format);
     IEnumerable<FileDimensionDto> GetCachedFileDimensions(int chapterId);
     string GetCachedBookmarkPagePath(int seriesId, int page);
     string GetCachedFile(Chapter chapter);
@@ -59,6 +60,10 @@ public class CacheService : ICacheService
         _bookmarkService = bookmarkService;
     }
 
+    public int GetNumberOfPages(string filePath, MangaFormat format) {
+        return _readingItemService.GetNumberOfPages(filePath, format);
+    }
+    
     public IEnumerable<FileDimensionDto> GetCachedFileDimensions(int chapterId)
     {
         var sw = Stopwatch.StartNew();
