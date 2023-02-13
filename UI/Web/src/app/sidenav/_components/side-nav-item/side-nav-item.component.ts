@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, Params } from '@angular/router';
 import { filter, map, Subject, takeUntil } from 'rxjs';
 import { NavService } from 'src/app/_services/nav.service';
 
@@ -25,6 +25,8 @@ export class SideNavItemComponent implements OnInit, OnDestroy {
    * If a link should be generated when clicked. By default (undefined), no link will be generated
    */
   @Input() link: string | undefined;
+
+  @Input() queryParams: Params | undefined;
 
   @Input() comparisonMethod: 'startsWith' | 'equals' = 'equals';
 

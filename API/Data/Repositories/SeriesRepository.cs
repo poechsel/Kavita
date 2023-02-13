@@ -802,6 +802,7 @@ public class SeriesRepository : ISeriesRepository
                 SortField.LastChapterAdded => query.OrderBy(s => s.LastChapterAdded),
                 SortField.TimeToRead => query.OrderBy(s => s.AvgHoursToRead),
                 SortField.ReleaseYear => query.OrderBy(s => s.Metadata.ReleaseYear),
+                SortField.Random => query.OrderBy(x =>  API.Entities.Extensions.Random()),
                 _ => query
             };
         }
@@ -815,6 +816,7 @@ public class SeriesRepository : ISeriesRepository
                 SortField.LastChapterAdded => query.OrderByDescending(s => s.LastChapterAdded),
                 SortField.TimeToRead => query.OrderByDescending(s => s.AvgHoursToRead),
                 SortField.ReleaseYear => query.OrderByDescending(s => s.Metadata.ReleaseYear),
+                SortField.Random => query.OrderByDescending(x => Guid.NewGuid().ToString()),
                 _ => query
             };
         }
@@ -867,6 +869,7 @@ public class SeriesRepository : ISeriesRepository
                 SortField.LastModifiedDate => query.OrderBy(s => s.LastModified),
                 SortField.LastChapterAdded => query.OrderBy(s => s.LastChapterAdded),
                 SortField.TimeToRead => query.OrderBy(s => s.AvgHoursToRead),
+                SortField.Random => query.OrderBy(x => Guid.NewGuid().ToString()),
                 _ => query
             };
         }
@@ -879,6 +882,7 @@ public class SeriesRepository : ISeriesRepository
                 SortField.LastModifiedDate => query.OrderByDescending(s => s.LastModified),
                 SortField.LastChapterAdded => query.OrderByDescending(s => s.LastChapterAdded),
                 SortField.TimeToRead => query.OrderByDescending(s => s.AvgHoursToRead),
+                SortField.Random => query.OrderByDescending(x => Guid.NewGuid().ToString()),
                 _ => query
             };
         }

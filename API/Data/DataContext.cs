@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace API.Data;
 
@@ -107,6 +108,8 @@ public sealed class DataContext : IdentityDbContext<AppUser, AppRole, int,
         builder.Entity<Library>()
             .Property(b => b.ManageCollections)
             .HasDefaultValue(true);
+            
+        builder.HasDbFunction(typeof(API.Entities.Extensions).GetMethod(nameof(API.Entities.Extensions.Random))).HasName("RANDOM");
     }
 
 

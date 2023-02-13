@@ -25,5 +25,9 @@ public enum SortField
     /// <summary>
     /// Release Year of the Series
     /// </summary>
-    ReleaseYear = 6
+    ReleaseYear = 6,
+    /// <summary>
+    /// Random ordering
+    /// </summary>
+    Random = 7,
 }

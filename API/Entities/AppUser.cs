@@ -5,8 +5,17 @@ using API.Entities.Enums;
 using API.Entities.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
-
 namespace API.Entities;
+
+
+public static class Extensions
+{
+     public static Guid Random() 
+     { // to prove not used by our C# code... 
+         throw new NotImplementedException(); 
+     }
+}
+
 
 public class AppUser : IdentityUser<int>, IHasConcurrencyToken
 {
