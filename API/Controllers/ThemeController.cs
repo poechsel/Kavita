@@ -36,7 +36,7 @@ public class ThemeController : BaseApiController
     [HttpPost("scan")]
     public ActionResult Scan()
     {
-        _taskScheduler.ScanSiteThemes();
+        //_taskScheduler.ScanSiteThemes();
         return Ok();
     }
 

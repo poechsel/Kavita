@@ -134,6 +134,7 @@ public class ScannerService : IScannerService
     /// <param name="folder"></param>
     public async Task ScanFolder(string folder)
     {
+        return;
         Series series = null;
         try
         {
@@ -187,6 +188,7 @@ public class ScannerService : IScannerService
     [Queue(TaskScheduler.ScanQueue)]
     public async Task ScanSeries(int seriesId, bool bypassFolderOptimizationChecks = true)
     {
+        return;
         var sw = Stopwatch.StartNew();
         var files = await _unitOfWork.SeriesRepository.GetFilesForSeries(seriesId);
         var series = await _unitOfWork.SeriesRepository.GetFullSeriesForSeriesIdAsync(seriesId);
@@ -440,6 +442,7 @@ public class ScannerService : IScannerService
     [AutomaticRetry(Attempts = 3, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task ScanLibraries()
     {
+        return;
         _logger.LogInformation("Starting Scan of All Libraries");
         foreach (var lib in await _unitOfWork.LibraryRepository.GetLibrariesAsync())
         {
@@ -461,6 +464,7 @@ public class ScannerService : IScannerService
     [AutomaticRetry(Attempts = 3, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
     public async Task ScanLibrary(int libraryId, bool forceUpdate = false)
     {
+        return;
         var sw = Stopwatch.StartNew();
         var library = await _unitOfWork.LibraryRepository.GetLibraryForIdAsync(libraryId, LibraryIncludes.Folders);
         var libraryFolderPaths = library.Folders.Select(fp => fp.Path).ToList();
@@ -591,6 +595,7 @@ public class ScannerService : IScannerService
     private async Task<long> ScanFiles(Library library, IEnumerable<string> dirs,
         bool isLibraryScan, Func<Tuple<bool, IList<ParserInfo>>, Task> processSeriesInfos = null, bool forceChecks = false)
     {
+        return 0;
         var scanner = new ParseScannedFiles(_logger, _directoryService, _readingItemService, _eventHub);
         var scanWatch = Stopwatch.StartNew();
 

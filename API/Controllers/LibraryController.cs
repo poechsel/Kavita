@@ -178,7 +178,7 @@ public class LibraryController : BaseApiController
     [HttpPost("scan")]
     public ActionResult Scan(int libraryId, bool force = false)
     {
-        _taskScheduler.ScanLibrary(libraryId, force);
+        //_taskScheduler.ScanLibrary(libraryId, force);
         return Ok();
     }
 
