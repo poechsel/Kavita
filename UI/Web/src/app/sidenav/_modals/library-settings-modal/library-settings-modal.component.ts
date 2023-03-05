@@ -140,7 +140,7 @@ export class LibrarySettingsModalComponent implements OnInit, OnDestroy {
   }
 
   forceScan() {
-    this.libraryService.scan(this.library.id, true).subscribe(() => this.toastr.info('A forced scan has been started for ' + this.library.name));
+    this.libraryService.scan(this.library.id, false).subscribe(() => this.toastr.info('A forced scan has been started for ' + this.library.name));
   }
 
   async save() {
