@@ -122,12 +122,12 @@ export class LibraryDetailComponent implements OnInit, OnDestroy {
       this.titleService.setTitle('Kavita - ' + this.libraryName);
       this.cdRef.markForCheck();
     });
-
-    this.libraryService.getJumpBar(this.libraryId).subscribe(barDetails => {
+    /*
+    this.libraryService.getJumpBar(this.libraryId, undefined).subscribe(barDetails => {
       this.jumpKeys = barDetails;
       this.cdRef.markForCheck();
     });
-
+    */
     this.actions = this.actionFactoryService.getLibraryActions(this.handleAction.bind(this));
     
     this.pagination = this.filterUtilityService.pagination(this.route.snapshot);
@@ -242,6 +242,10 @@ export class LibraryDetailComponent implements OnInit, OnDestroy {
     this.filterActive = !this.utilityService.deepEqual(this.filter, this.filterActiveCheck);
     this.cdRef.markForCheck();
     
+    this.libraryService.getJumpBar(this.libraryId, this.filter).subscribe(barDetails => {
+      this.jumpKeys = barDetails;
+      this.cdRef.markForCheck();
+    });
     this.seriesService.getSeriesForLibrary(0, undefined, undefined, this.filter).pipe(take(1)).subscribe(series => {
       this.series = series.result; 
       this.pagination = series.pagination;

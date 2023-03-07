@@ -7,6 +7,7 @@ using API.Data;
 using API.Data.Repositories;
 using API.DTOs;
 using API.DTOs.JumpBar;
+using API.DTOs.Filtering;
 using API.DTOs.Search;
 using API.DTOs.System;
 using API.Entities;
@@ -121,12 +122,12 @@ public class LibraryController : BaseApiController
     }
 
     [HttpGet("jump-bar")]
-    public async Task<ActionResult<IEnumerable<JumpKeyDto>>> GetJumpBar(int libraryId)
+    public async Task<ActionResult<IEnumerable<JumpKeyDto>>> GetJumpBar( int libraryId, [FromQuery] FilterDto filterDto)
     {
         var userId = await _unitOfWork.UserRepository.GetUserIdByUsernameAsync(User.GetUsername());
         if (!await _unitOfWork.UserRepository.HasAccessToLibrary(libraryId, userId)) return BadRequest("User does not have access to library");
-
-        return Ok(_unitOfWork.LibraryRepository.GetJumpBarAsync(libraryId));
+        var res = await _unitOfWork.SeriesRepository.GetJumpBarAsync(libraryId, userId, filterDto);
+        return Ok(res);
     }
 
 

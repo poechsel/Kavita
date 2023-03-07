@@ -43,7 +43,6 @@ public interface ILibraryRepository
     Task<LibraryType> GetLibraryTypeAsync(int libraryId);
     Task<IEnumerable<Library>> GetLibraryForIdsAsync(IEnumerable<int> libraryIds, LibraryIncludes includes = LibraryIncludes.None);
     Task<int> GetTotalFiles();
-    IEnumerable<JumpKeyDto> GetJumpBarAsync(int libraryId);
     Task<IList<AgeRatingDto>> GetAllAgeRatingsDtosForLibrariesAsync(List<int> libraryIds);
     Task<IList<LanguageDto>> GetAllLanguagesForLibrariesAsync(List<int> libraryIds);
     Task<IList<LanguageDto>> GetAllLanguagesForLibrariesAsync();
@@ -161,36 +160,6 @@ public class LibraryRepository : ILibraryRepository
         return await _context.MangaFile.CountAsync();
     }
 
-    public IEnumerable<JumpKeyDto> GetJumpBarAsync(int libraryId)
-    {
-        var seriesSortCharacters = _context.Series.Where(s => s.LibraryId == libraryId)
-            .Select(s => s.SortName.ToUpper())
-            .OrderBy(s => s)
-            .AsEnumerable()
-            .Select(s => s[0]);
-
-        // Map the title to the number of entities
-        var firstCharacterMap = new Dictionary<char, int>();
-        foreach (var sortChar in seriesSortCharacters)
-        {
-            var c = sortChar;
-            var isAlpha = char.IsLetter(sortChar);
-            if (!isAlpha) c = '#';
-            if (!firstCharacterMap.ContainsKey(c))
-            {
-                firstCharacterMap[c] = 0;
-            }
-
-            firstCharacterMap[c] += 1;
-        }
-
-        return firstCharacterMap.Keys.Select(k => new JumpKeyDto()
-        {
-            Key = k + string.Empty,
-            Size = firstCharacterMap[k],
-            Title = k + string.Empty
-        });
-    }
 
     /// <summary>
     /// Returns all Libraries with their Folders

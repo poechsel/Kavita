@@ -5,7 +5,9 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { JumpKey } from '../_models/jumpbar/jump-key';
 import { Library, LibraryType } from '../_models/library';
+import { SeriesFilter } from '../_models/metadata/series-filter';
 import { DirectoryDto } from '../_models/system/directory-dto';
+import { FilterUtilitiesService } from '../shared/_services/filter-utilities.service';
 
 
 @Injectable({
@@ -18,7 +20,8 @@ export class LibraryService {
   private libraryNames: {[key:number]: string} | undefined = undefined;
   private libraryTypes: {[key: number]: LibraryType} | undefined = undefined;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient,
+    private filterUtilitySerivce: FilterUtilitiesService) {}
 
   getLibraryNames() {
     if (this.libraryNames != undefined) {
@@ -63,8 +66,9 @@ export class LibraryService {
     return this.httpClient.get<DirectoryDto[]>(this.baseUrl + 'library/list' + query);
   }
 
-  getJumpBar(libraryId: number) {
-    return this.httpClient.get<JumpKey[]>(this.baseUrl + 'library/jump-bar?libraryId=' + libraryId);
+  getJumpBar(libraryId: number, filter: SeriesFilter | undefined) {
+    const data = this.filterUtilitySerivce.urlFromFilter(this.baseUrl + 'library/jump-bar?libraryId=' + libraryId, filter);
+    return this.httpClient.get<JumpKey[]>(data);
   }
 
   getLibraries() {

@@ -8,6 +8,7 @@ using API.Data.Scanner;
 using API.DTOs;
 using API.DTOs.CollectionTags;
 using API.DTOs.Filtering;
+using API.DTOs.JumpBar;
 using API.DTOs.Metadata;
 using API.DTOs.ReadingLists;
 using API.DTOs.Search;
@@ -77,6 +78,7 @@ public interface ISeriesRepository
     /// <returns></returns>
     Task<SearchResultGroupDto> SearchSeries(int userId, bool isAdmin, IList<int> libraryIds, string searchQuery);
     Task<IEnumerable<Series>> GetSeriesForLibraryIdAsync(int libraryId, SeriesIncludes includes = SeriesIncludes.None);
+    Task<IEnumerable<JumpKeyDto>> GetJumpBarAsync(int libraryId, int userId, FilterDto filterDto);
     Task<SeriesDto> GetSeriesDtoByIdAsync(int seriesId, int userId);
     Task<Series> GetSeriesByIdAsync(int seriesId, SeriesIncludes includes = SeriesIncludes.Volumes | SeriesIncludes.Metadata);
     Task<IList<Series>> GetSeriesByIdsAsync(IList<int> seriesIds);
@@ -822,6 +824,37 @@ public class SeriesRepository : ISeriesRepository
         }
 
         return query;
+    }
+
+    public async Task<IEnumerable<JumpKeyDto>> GetJumpBarAsync(int libraryId, int userId, FilterDto filterDto)
+    {
+        var series = await CreateFilteredSearchQueryable(userId, libraryId, filterDto, QueryContext.None);
+        var seriesSortCharacters = series
+            .Select(s => s.SortName.ToUpper())
+            .AsEnumerable()
+            .Select(s => s[0]);
+
+        // Map the title to the number of entities
+        var firstCharacterMap = new Dictionary<char, int>();
+        foreach (var sortChar in seriesSortCharacters)
+        {
+            var c = sortChar;
+            var isAlpha = char.IsLetter(sortChar);
+            if (!isAlpha) c = '#';
+            if (!firstCharacterMap.ContainsKey(c))
+            {
+                firstCharacterMap[c] = 0;
+            }
+
+            firstCharacterMap[c] += 1;
+        }
+
+        return firstCharacterMap.Keys.Select(k => new JumpKeyDto()
+        {
+            Key = k + string.Empty,
+            Size = firstCharacterMap[k],
+            Title = k + string.Empty
+        });
     }
 
     private async Task<IQueryable<Series>> CreateFilteredSearchQueryable(int userId, int libraryId, FilterDto filter, IQueryable<Series> sQuery)
